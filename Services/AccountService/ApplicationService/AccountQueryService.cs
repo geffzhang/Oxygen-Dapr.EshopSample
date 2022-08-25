@@ -25,6 +25,8 @@ using Nest;
 using InfrastructureBase.Data.Nest;
 using System.Net.Http;
 using Infrastructure.Filter;
+using Oxygen.MulitlevelCache;
+using System.Threading;
 
 namespace ApplicationService
 {
@@ -91,7 +93,7 @@ namespace ApplicationService
             var query = efDbContext.User.Where(x => input.Ids.Contains(x.AccountId)).Select(x => new GetAccountUserNameByIdsResponse { AccountId = x.AccountId, Name = x.UserName }).ToListAsync();
             return await ApiResult.Ok(query).Async();
         }
-
+        [SystemCached]
         public async Task<ApiResult> GetMockAccount()
         {
             var result = await (from account in efDbContext.Account.Where(x => x.LoginName == "eshopuser")
